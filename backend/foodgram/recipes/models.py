@@ -18,6 +18,9 @@ class Ingredient(models.Model):
 
     class Meta:
         verbose_name = 'Ингредиент'
+        indexes = [
+            models.Index(fields=['name', ]),
+        ]
 
 
 class Tag(models.Model):
@@ -51,6 +54,10 @@ class Tag(models.Model):
 
     class Meta:
         verbose_name = 'Тег'
+        indexes = [
+            models.Index(fields=['slug', ]),
+            models.Index(fields=['name', ]),
+        ]
 
 
 class Recipe(models.Model):
@@ -84,6 +91,10 @@ class Recipe(models.Model):
 
     class Meta:
         verbose_name = 'Рецепт'
+        indexes = [
+            models.Index(fields=['name', ]),
+            models.Index(fields=['author', ]),
+        ]
 
 
 class RecipeIngredient(models.Model):
@@ -94,11 +105,12 @@ class RecipeIngredient(models.Model):
     )
     ingredient = models.ForeignKey(
         Ingredient,
-        on_delete=models.RESTRICT,
+        on_delete=models.PROTECT,
+        verbose_name='Ингредиент',
     )
     amount = models.IntegerField(
         validators=[MinValueValidator(1)],
-        verbose_name='Количество'
+        verbose_name='Количество',
     )
 
     class Meta:
@@ -108,6 +120,11 @@ class RecipeIngredient(models.Model):
                 fields=('recipe', 'ingredient'),
                 name='unique_review_recipe_ingredient',
             ),
+        ]
+        indexes = [
+            models.Index(fields=['recipe', ]),
+            models.Index(fields=['ingredient', ]),
+            models.Index(fields=['recipe', 'ingredient', ]),
         ]
 
 
@@ -132,6 +149,11 @@ class Favorite(models.Model):
                 name='unique_review_favorite',
             ),
         ]
+        indexes = [
+            models.Index(fields=['user', ]),
+            models.Index(fields=['recipe', ]),
+            models.Index(fields=['user', 'recipe', ]),
+        ]
 
 
 class ShoppingCard(models.Model):
@@ -154,6 +176,11 @@ class ShoppingCard(models.Model):
                 fields=('user', 'recipe'),
                 name='unique_review_shopping_card',
             ),
+        ]
+        indexes = [
+            models.Index(fields=['user', ]),
+            models.Index(fields=['recipe', ]),
+            models.Index(fields=['user', 'recipe', ]),
         ]
 
 
@@ -182,4 +209,9 @@ class Subscription(models.Model):
                 check=~~models.Q(user=models.F("subscriber")),
                 name="forbidden_subscript_self",
             ),
+        ]
+        indexes = [
+            models.Index(fields=['user', ]),
+            models.Index(fields=['subscriber', ]),
+            models.Index(fields=['user', 'subscriber', ]),
         ]
