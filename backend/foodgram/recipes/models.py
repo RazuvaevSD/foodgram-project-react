@@ -5,24 +5,6 @@ from django.db import models
 User = get_user_model()
 
 
-class Ingredient(models.Model):
-    """Модель 'Ингредиент'"""
-    name = models.CharField(
-        max_length=200,
-        verbose_name='Наименование',
-    )
-    measurement_unit = models.CharField(
-        max_length=200,
-        verbose_name='Единица измерения',
-    )
-
-    class Meta:
-        verbose_name = 'Ингредиент'
-        indexes = [
-            models.Index(fields=['name', ]),
-        ]
-
-
 class Tag(models.Model):
     """Модель 'Тег'"""
     name = models.CharField(
@@ -54,9 +36,62 @@ class Tag(models.Model):
 
     class Meta:
         verbose_name = 'Тег'
+        ordering = ['-id']
         indexes = [
             models.Index(fields=['slug', ]),
             models.Index(fields=['name', ]),
+        ]
+
+
+class Ingredient(models.Model):
+    """Модель 'Ингредиент'"""
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Наименование',
+    )
+    measurement_unit = models.CharField(
+        max_length=200,
+        verbose_name='Единица измерения',
+    )
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        ordering = ['-id']
+        indexes = [
+            models.Index(fields=['name', ]),
+        ]
+
+
+class IngredientInRecipe(models.Model):
+    """Модель 'Ингредиент рецепта'"""
+    ingredients = models.ForeignKey(
+        Ingredient,
+        on_delete=models.PROTECT,
+        related_name='recipes',
+        verbose_name='Рецепт',
+    )
+    recipes = models.ForeignKey(
+        'Recipe',
+        on_delete=models.CASCADE,
+        related_name='ingredients'
+    )
+    amount = models.PositiveIntegerField(
+        verbose_name='Количество',
+    )
+
+    class Meta:
+        verbose_name = 'Ингредиент рецепта'
+        ordering = ['-id']
+        constraints = [
+            models.UniqueConstraint(
+                fields=('ingredients', 'recipes'),
+                name='unique_ingredients_in_recipe',
+            ),
+        ]
+        indexes = [
+            models.Index(fields=['ingredients', ]),
+            models.Index(fields=['recipes', ]),
+            models.Index(fields=['recipes', 'ingredients', ]),
         ]
 
 
@@ -91,40 +126,10 @@ class Recipe(models.Model):
 
     class Meta:
         verbose_name = 'Рецепт'
+        ordering = ['-id']
         indexes = [
             models.Index(fields=['name', ]),
             models.Index(fields=['author', ]),
-        ]
-
-
-class RecipeIngredient(models.Model):
-    """Модель 'Ингредиент рецепта'"""
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-    )
-    ingredient = models.ForeignKey(
-        Ingredient,
-        on_delete=models.PROTECT,
-        verbose_name='Ингредиент',
-    )
-    amount = models.IntegerField(
-        validators=[MinValueValidator(1)],
-        verbose_name='Количество',
-    )
-
-    class Meta:
-        verbose_name = 'Ингредиент рецепта'
-        constraints = [
-            models.UniqueConstraint(
-                fields=('recipe', 'ingredient'),
-                name='unique_review_recipe_ingredient',
-            ),
-        ]
-        indexes = [
-            models.Index(fields=['recipe', ]),
-            models.Index(fields=['ingredient', ]),
-            models.Index(fields=['recipe', 'ingredient', ]),
         ]
 
 
@@ -133,16 +138,19 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='favorites',
         verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name='favorites',
         verbose_name='Рецепт',
     )
 
     class Meta:
         verbose_name = 'Избранное'
+        ordering = ['-id']
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
@@ -161,16 +169,19 @@ class ShoppingCard(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='purchase',
         verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        verbose_name='Рецепт',
+        related_name='purchase',
+        verbose_name='Купить',
     )
 
     class Meta:
         verbose_name = 'Корзина'
+        ordering = ['-id']
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
@@ -189,29 +200,32 @@ class Subscription(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='Пользователь',
+        related_name='subscriptions',
+        verbose_name='Пользователь'
     )
-    subscriber = models.ForeignKey(
+    author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='Подписчик',
+        related_name='subscribers',
+        verbose_name='Автор'
     )
 
     class Meta:
         verbose_name = 'Подписки'
+        ordering = ('-id',)
         constraints = [
             models.UniqueConstraint(
-                fields=('user', 'subscriber'),
+                fields=('user', 'author'),
                 name='unique_review_subscription',
             ),
             models.CheckConstraint(
                 # Запрет подписки на себя
-                check=~~models.Q(user=models.F("subscriber")),
+                check=~models.Q(user=models.F("author")),
                 name="forbidden_subscript_self",
             ),
         ]
         indexes = [
             models.Index(fields=['user', ]),
-            models.Index(fields=['subscriber', ]),
-            models.Index(fields=['user', 'subscriber', ]),
+            models.Index(fields=['author', ]),
+            models.Index(fields=['user', 'author', ]),
         ]

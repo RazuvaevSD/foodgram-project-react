@@ -6,7 +6,7 @@ SECRET_KEY = 'ewm7m)*t0b-!fbb0md2*(9j*6j$sc#@b&g^8#1(k*0o8i)5qzb'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 INSTALLED_APPS = [
@@ -17,6 +17,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
+    'rest_framework.authtoken',
+    'djoser',
     'recipes.apps.RecipesConfig',
     'api.apps.ApiConfig',
 ]
@@ -99,3 +102,33 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+TEST_DATA_DIR = os.path.join(BASE_DIR, 'static/data/')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'SET_PASSWORD_RETYPE': False,
+    'HIDE_USERS': False,
+
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.UserSerializer',
+        'user': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+        'subscribe': 'api.serializers.SubscribeSerializer'
+    },
+    'PERMISSIONS': {
+        'user': ('rest_framework.permissions.IsAuthenticated',),
+        'user_list': ('rest_framework.permissions.AllowAny',),
+    },
+}
