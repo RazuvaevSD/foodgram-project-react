@@ -7,8 +7,6 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCard,
-                            Subscription, Tag, User)
 from .filters import (AuthorIdFilter, IsFavoritedFilter,
                       IsInShoppingCartFilter, TagsSlugFilter)
 from .paginators import LimitPagePagination
@@ -17,6 +15,8 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeSerializer, ShoppingCardSerializer,
                           SubscribeSerializer, TagSerializer)
 from .utils import add_object, del_object, generate_pdf_shopping_cart
+from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCard,
+                            Subscription, Tag, User)
 
 
 class UserViewSet(DjoserUserViewSet):
