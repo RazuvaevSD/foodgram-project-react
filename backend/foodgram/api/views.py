@@ -1,19 +1,19 @@
 from django.db.models import F, Sum
 from django.http import FileResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
-from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCard,
-                            Subscription, Tag, User)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCard,
+                            Subscription, Tag, User)
 from .filters import (AuthorIdFilter, IsFavoritedFilter,
                       IsInShoppingCartFilter, TagsSlugFilter)
 from .paginators import LimitPagePagination
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from .serializers import (FaforiteSerializer, IngredientSerializer,
+from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeSerializer, ShoppingCardSerializer,
                           SubscribeSerializer, TagSerializer)
 from .utils import add_object, del_object, generate_pdf_shopping_cart
@@ -90,7 +90,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'recipe': get_object_or_404(Recipe, pk=pk).pk}
         if request.method == 'POST':
             # Добавить в избранное.
-            return add_object(data=data, serialiser=FaforiteSerializer,
+            return add_object(data=data, serialiser=FavoriteSerializer,
                               context={'request': request})
         if request.method == 'DELETE':
             # Удалить из избранного.

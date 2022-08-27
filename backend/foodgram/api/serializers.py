@@ -1,6 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
-from recipes import models
 from rest_framework import serializers
+
+from recipes import models
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -117,7 +118,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
 
-class FaforiteSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):
     """Избранное."""
     user = serializers.PrimaryKeyRelatedField(
         queryset=models.User.objects.all(),
