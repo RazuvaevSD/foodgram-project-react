@@ -96,13 +96,14 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def _create_ingredients(recipe, validated_data):
-        for ingredient in validated_data:
-            ingr_in_recipe = models.IngredientInRecipe.objects.create(
-                recipes=recipe,
-                ingredients=ingredient['id'],
-                amount=ingredient['amount']
-            )
-            ingr_in_recipe.save()
+        ingr_in_recipe = [
+            models.IngredientInRecipe(recipes=recipe,
+                                      ingredients=ingredient['id'],
+                                      amount=ingredient['amount'])
+            for ingredient in validated_data]
+        batch_size = 100
+        models.IngredientInRecipe.objects.bulk_create(ingr_in_recipe,
+                                                      batch_size)
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
