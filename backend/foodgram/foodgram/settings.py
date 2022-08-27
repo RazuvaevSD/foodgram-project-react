@@ -1,8 +1,15 @@
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'ewm7m)*t0b-!fbb0md2*(9j*6j$sc#@b&g^8#1(k*0o8i)5qzb'
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    default='ewm7m)*t0b-!fbb0md2*(9j*6j$sc#@b&g^8#1(k*0o8i)5qzb'
+)
 
 DEBUG = True
 
@@ -112,7 +119,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
 
