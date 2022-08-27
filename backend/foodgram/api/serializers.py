@@ -1,5 +1,6 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 
 from recipes import models
 
@@ -24,6 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TagSerializer(serializers.ModelSerializer):
     """Теги."""
+
     class Meta:
         model = models.Tag
         fields = ['id', 'name', 'color', 'slug']
@@ -31,6 +33,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class IngredientSerializer(serializers.ModelSerializer):
     """Ингредиенты."""
+
     class Meta:
         model = models.Ingredient
         fields = ['id', 'name', 'measurement_unit']
@@ -79,6 +82,22 @@ class RecipeSerializer(serializers.ModelSerializer):
         return models.ShoppingCard.objects.filter(user=user,
                                                   recipe=obj).exists()
 
+    def validate(self, data):
+        if len(data['ingredients']) < 1:
+            raise serializers.ValidationError(
+                {'errors': 'Необходимо указать хотябы один ингредиент!'}
+            )
+        ingredients = [ingredient['id'] for ingredient in data['ingredients']]
+        if len(set(ingredients)) != len(ingredients):
+            raise serializers.ValidationError(
+                {'errors': 'Ингредиенты не должны повтряться!'}
+            )
+        if len(set(data['tags'])) != len(data['tags']):
+            raise serializers.ValidationError(
+                {'error': 'Теги не должны повторяться!'}
+            )
+        return data
+
     def to_representation(self, instance):
         represent = super().to_representation(instance)
         # Добавить детализацию тегов.
@@ -89,8 +108,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         represent['ingredients'] = []
         for ingredient in instance.ingredients.all():
             data = IngredientSerializer(ingredient.ingredients).data
-            data['amount'] = (IngredientInRecipeSerializer(ingredient).
-                              data['amount'])
+            data['amount'] = (
+                IngredientInRecipeSerializer(ingredient).
+                data['amount']
+            )
             represent['ingredients'].append(data)
         return represent
 
@@ -163,6 +184,7 @@ class ShoppingCardSerializer(serializers.ModelSerializer):
 
 class SubscribeRecipesSerializer(serializers.ModelSerializer):
     """Сериализатор рецептов, для сериализатора подписок."""
+
     class Meta:
         model = models.Recipe
         fields = ['id', 'name', 'image', 'cooking_time']

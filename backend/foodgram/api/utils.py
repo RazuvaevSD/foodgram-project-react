@@ -19,6 +19,9 @@ def add_object(serialiser, data, context):
     except IntegrityError as ie:
         return Response({'errors': f'{ie}'},
                         status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'errors': f'{e}'},
+                        status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
