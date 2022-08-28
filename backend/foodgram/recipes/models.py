@@ -42,6 +42,9 @@ class Tag(models.Model):
             models.Index(fields=['name', ]),
         ]
 
+    def __str__(self):
+        return self.slug
+
 
 class Ingredient(models.Model):
     """Модель 'Ингредиент'"""
@@ -61,6 +64,9 @@ class Ingredient(models.Model):
             models.Index(fields=['name', ]),
         ]
 
+    def __str__(self):
+        return self.name
+
 
 class IngredientInRecipe(models.Model):
     """Модель 'Ингредиент рецепта'"""
@@ -68,12 +74,13 @@ class IngredientInRecipe(models.Model):
         Ingredient,
         on_delete=models.PROTECT,
         related_name='recipes',
-        verbose_name='Рецепт',
+        verbose_name='Ингредиент',
     )
     recipes = models.ForeignKey(
         'Recipe',
         on_delete=models.CASCADE,
-        related_name='ingredients'
+        related_name='ingredients',
+        verbose_name='Рецепт'
     )
     amount = models.PositiveIntegerField(
         validators=[MinValueValidator(1), ],
@@ -132,6 +139,9 @@ class Recipe(models.Model):
             models.Index(fields=['name', ]),
             models.Index(fields=['author', ]),
         ]
+
+    def __str__(self):
+        return self.name
 
 
 class Favorite(models.Model):
