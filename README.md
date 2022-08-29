@@ -1,6 +1,5 @@
 # Foodgram
-[![Foodgram](https://github.com/RazuvaevSD/foodgram-project-react/workflows/Foodgram-workflow/badge.svg?branch=master&event=push)](https://github.com/RazuvaevSD/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
-
+![workflow](https://github.com/RazuvaevSD/foodgram-project-react/actions/workflows/workflow.yml/badge.svg)
 Сервис, где гурманы деляться своими супер-рецептами
 
 ## Установка:
@@ -30,19 +29,29 @@ source venv/bin/activate
 ```shell
 pip3 install -r requirements.txt
 ```
-Перейти в корневой каталог проекта
-```shell
-cd yatube_api
+Выполнить из директории infra команду для сборки контейнеров
+``` shell
+docker-compose up -d --build
 ```
-Запустить проект
-```shell
-python manage.py runserver
+Выполнить миграции
+``` shell
+docker-compose exec backend python manage.py migrate
+```
+Создать суперюзверя
+``` shell
+docker-compose exec backend python manage.py createsuperuser
+```
+Собрать статику
+``` shell
+docker-compose exec backend python manage.py collectstatic --no-input
 ```
 
 ***
 ## Загрузка ингредиентов
+Поместите JSON-файл с рецептами в каталог `./backend/foodgram/static/`
+и выполните команду 
 ```shell
-python manage.py load_json recipes Ingredient ingredients.json
+python manage.py load_json recipes Ingredient <your_filename>
 ```
 
 ***
