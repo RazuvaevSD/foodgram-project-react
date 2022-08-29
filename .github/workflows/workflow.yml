@@ -67,12 +67,13 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
+            sudo docker pull razuvaev/foodgram_backend:latest
+            sudo docker pull razuvaev/foodgram_frontend:latest
             sudo docker-compose stop
             sudo docker-compose rm backend
-            rm ./${{ secrets.USER }}/infra/.env
-            touch ./${{ secrets.USER }}/infra/.env
+            sudo docker-compose rm frontend
+            rm ./infra/.env
+            touch ./infra/.env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> ./infra/.env
             echo DB_NAME=${{ secrets.DB_NAME }} >> ./infra/.env
             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> ./infra/.env
