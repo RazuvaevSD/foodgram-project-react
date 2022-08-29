@@ -1,6 +1,8 @@
 from django.db.models import F, Sum
 from django.http import FileResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
+from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCard,
+                            Subscription, Tag, User)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -15,8 +17,6 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeSerializer, ShoppingCardSerializer,
                           SubscribeSerializer, TagSerializer)
 from .utils import add_object, del_object, generate_pdf_shopping_cart
-from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCard,
-                            Subscription, Tag, User)
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -39,6 +39,7 @@ class UserViewSet(DjoserUserViewSet):
             # Удалить подписку.
             return del_object(model=Subscription,
                               filters=data)
+        return None
 
     @action(detail=False, methods=['get'],
             permission_classes=(IsAuthenticated,))
@@ -95,6 +96,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'DELETE':
             # Удалить из избранного.
             return del_object(Favorite, data)
+        return None
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=(IsAuthenticated,))
@@ -110,6 +112,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'DELETE':
             # Удалить из списка покупок.
             return del_object(model=ShoppingCard, filters=data)
+        return None
 
     @action(detail=False, methods=['get'],
             permission_classes=(IsAuthenticated,))
