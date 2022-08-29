@@ -122,9 +122,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                                       ingredients=ingredient['id'],
                                       amount=ingredient['amount'])
             for ingredient in validated_data]
-        batch_size = 100
-        models.IngredientInRecipe.objects.bulk_create(ingr_in_recipe,
-                                                      batch_size)
+        models.IngredientInRecipe.objects.bulk_create(ingr_in_recipe)
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
