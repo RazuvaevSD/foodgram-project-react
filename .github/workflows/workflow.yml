@@ -70,6 +70,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
             sudo docker-compose stop
+            sudo docker-compose rm backend
             rm ./infra/.env
             touch ./infra/.env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> ./infra/.env
@@ -79,8 +80,8 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> ./infra/.env
             echo DB_PORT=${{ secrets.DB_PORT }} >> ./infra/.env
             sudo docker-compose up -d
-            sudo docker-compose exec -T web python manage.py migrate
-            sudo docker-compose exec -T web python manage.py collectstatic --no-input
+            sudo docker-compose exec -T backend python manage.py migrate
+            sudo docker-compose exec -T backend python manage.py collectstatic --no-input
 
   send_message:
     runs-on: ubuntu-latest
