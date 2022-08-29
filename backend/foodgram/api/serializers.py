@@ -87,14 +87,28 @@ class RecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'errors': 'Необходимо указать хотябы один ингредиент!'}
             )
-        ingredients = [ingredient['id'] for ingredient in data['ingredients']]
-        if len(set(ingredients)) != len(ingredients):
-            raise serializers.ValidationError(
-                {'errors': 'Ингредиенты не должны повтряться!'}
-            )
         if len(set(data['tags'])) != len(data['tags']):
             raise serializers.ValidationError(
                 {'error': 'Теги не должны повторяться!'}
+            )
+        if data['cooking_time'] < 1:
+            raise serializers.ValidationError(
+                {'cooking_time': 'Убедитесь, что это значение больше либо '
+                                 'равно 1!'}
+            )
+        ingredients = []
+        for ingredient in data['ingredients']:
+            print('ingredient["amount"]', ingredient['amount'])
+            if ingredient['amount'] < 1:
+                raise serializers.ValidationError(
+                    {'amount': 'Убедитесь, что это значение больше либо '
+                               'равно 1!'}
+                )
+            ingredients.append(ingredient['id'])
+
+        if len(set(ingredients)) != len(ingredients):
+            raise serializers.ValidationError(
+                {'errors': 'Ингредиенты не должны повтряться!'}
             )
         return data
 
