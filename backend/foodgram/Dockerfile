@@ -12,4 +12,4 @@ RUN mkdir -p ./foodgram/static/data/
 
 COPY ../data/ ./foodgram/static/data/
 
-CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8090"]
+CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000"]
