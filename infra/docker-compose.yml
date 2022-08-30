@@ -6,23 +6,23 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     env_file:
-      - ./infra/.env
+      - /var/www/foodgram/infra/.env
 
   backend:
     image: razuvaev/foodgram_backend:latest
     restart: always
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - static_value:/var/www/foodgram/backend/foodgram/static/
+      - media_value:/var/www/foodgram/backend/foodgram/media/
     depends_on:
       - db
     env_file:
-      - ./infra/.env
+      - /var/www/foodgram/infra/.env
 
   frontend:
     image: razuvaev/foodgram_frontend:latest
     volumes:
-      - ../frontend/:/app/result_build/
+      - ../frontend/:/var/www/foodgram/frontend/
     depends_on:
       - backend
 
@@ -32,10 +32,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - ../frontend/:/var/www/foodgram/frontend/
+      - ../docs/:/var/www/foodgram/api/docs/
+      - static_value:/var/www/foodgram/backend/foodgram/static/
+      - media_value:/var/www/foodgram/backend/foodgram/media/
     depends_on:
       - frontend
   
