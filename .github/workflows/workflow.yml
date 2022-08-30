@@ -40,13 +40,13 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: /var/www/foodgram/backend/foodgram/
+          context: ./backend/foodgram/
           tags: razuvaev/foodgram_backend:latest
       - name: Push frontend to Docker Hub
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: /var/www/foodgram/frontend/
+          context: ./frontend/
           tags: razuvaev/foodgram_frontend:latest
 
   deploy:
