@@ -40,13 +40,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: ./backend/foodgram/
           tags: razuvaev/foodgram_backend:latest
       - name: Push frontend to Docker Hub
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: ./frontend/
           tags: razuvaev/foodgram_frontend:latest
 
   deploy:
@@ -70,15 +68,16 @@ jobs:
             sudo docker pull razuvaev/foodgram_backend:latest
             sudo docker pull razuvaev/foodgram_frontend:latest
             sudo docker-compose stop
-            rm /var/www/foodgram/infra/.env
-            touch /var/www/foodgram/infra/.env
-            echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> /var/www/foodgram/infra/.env
-            echo DB_NAME=${{ secrets.DB_NAME }} >> /var/www/foodgram/infra/.env
-            echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> /var/www/foodgram/infra/.env
-            echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> /var/www/foodgram/infra/.env
-            echo DB_HOST=${{ secrets.DB_HOST }} >> /var/www/foodgram/infra/.env
-            echo DB_PORT=${{ secrets.DB_PORT }} >> /var/www/foodgram/infra/.env
+            rm ./infra/.env
+            touch ./infra/.env
+            echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> ./infra/.env
+            echo DB_NAME=${{ secrets.DB_NAME }} >> ./infra/.env
+            echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> ./infra/.env
+            echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> ./infra/.env
+            echo DB_HOST=${{ secrets.DB_HOST }} >> ./infra/.env
+            echo DB_PORT=${{ secrets.DB_PORT }} >> ./infra/.env
             sudo docker-compose up -d
+            sudo docker-compose exec -T backend python manage.py makemigrations
             sudo docker-compose exec -T backend python manage.py migrate
             sudo docker-compose exec -T backend python manage.py collectstatic --no-input
 
