@@ -10,6 +10,6 @@ COPY ./ ./
 
 RUN mkdir -p ./foodgram/static/data/
 
-COPY ../data/ ./foodgram/static/data/
+COPY ../../data/ ./foodgram/static/data/
 
 CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000"]
