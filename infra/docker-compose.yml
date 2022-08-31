@@ -6,18 +6,18 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     env_file:
-      - ./infra/.env
+      - ./.env
 
   backend:
     image: razuvaev/foodgram_backend:latest
     restart: always
     volumes:
       - static_value:/app/backend_static/
-      - media_value:/app/backend_static/
+      - media_value:/app/backend_media/
     depends_on:
       - db
     env_file:
-      - ./infra/.env
+      - ./.env
 
   frontend:
     image: razuvaev/foodgram_frontend:latest
@@ -35,7 +35,7 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/backend_static/
-      - media_value:/var/html/backend_static/
+      - media_value:/var/html/backend_media/
     depends_on:
       - frontend
   
