@@ -82,6 +82,7 @@ jobs:
             sudo docker-compose exec -T backend python manage.py makemigrations
             sudo docker-compose exec -T backend python manage.py migrate
             sudo docker-compose exec -T backend python manage.py collectstatic --no-input
+            sudo docker-compose exec backend python manage.py createsuperuser2 --username ${{ secrets.DJANGO_SUPERUSER }} --email ${{ secrets.DJANGO_SUPERUSER_EMAIL }} --password ${{ secrets.DJANGO_SUPERUSER_PASS }}
 
   send_message:
     runs-on: ubuntu-latest
