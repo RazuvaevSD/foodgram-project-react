@@ -1,8 +1,8 @@
 import json
+import os
 
 from django.apps import apps
 from django.core.management.base import BaseCommand
-from foodgram import settings
 
 
 def application_existence_check(app_name):
@@ -23,8 +23,7 @@ def model_existence_check(app_class, model_name):
 
 def read_json(file):
     with open(file, "r") as read_file:
-        data = json.load(read_file)
-        return data
+        return json.load(read_file)
 
 
 def create_objects(model, data):
@@ -48,16 +47,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('app', type=str, help='Приложение')
         parser.add_argument('model', type=str, help='Модель')
-        parser.add_argument('filename', type=str, help='Файл')
+        parser.add_argument('filename', type=str, help='Путь к файлу')
 
     def handle(self, *args, **options):
         """Обработчик команды"""
         app_class = application_existence_check(options['app'])
         model_class = model_existence_check(app_class, options['model'])
-        file_path = (
-            settings.TEST_DATA_DIR
-            + (options['filename'] or (options['model'] + '.json'))
-        )
+        file_path = (os.path.abspath(options['filename']))
 
         data = read_json(file_path)
         create_objects(model_class, data)
