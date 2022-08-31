@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN python -m pip install -r ./backend/foodgram/requirements.txt --no-cache-dir
+RUN python -m pip install -r requirements.txt --no-cache-dir
 
-COPY ./backend/foodgram/ ./
+COPY ./ ./
 
 CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000"]
