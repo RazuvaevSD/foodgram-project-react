@@ -12,8 +12,8 @@ services:
     image: razuvaev/foodgram_backend:latest
     restart: always
     volumes:
-      - static_value:/app/backend/foodgram/static/
-      - media_value:/app/backend/foodgram/media/
+      - static_value:/app/static/
+      - media_value:/app/media/
     depends_on:
       - db
     env_file:
