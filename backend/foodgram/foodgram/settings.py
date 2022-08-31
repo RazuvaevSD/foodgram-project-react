@@ -114,7 +114,7 @@ USE_TZ = True
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
-TEST_DATA_DIR = os.path.join(BASE_DIR, 'static/data/')
+TEST_DATA_DIR = os.path.join(BASE_DIR, 'backend_static/data/')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
