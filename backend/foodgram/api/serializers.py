@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
@@ -11,7 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ['id', 'email', 'username', 'first_name', 'last_name',
-                  'is_subscribed']
+                  'is_subscribed', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        validated_data['password'] = make_password(password)
+        return super().create(validated_data)
 
     def get_is_subscribed(self, obj):
         """Наличие подписки на полученного(ых) пользователя(ей)."""
