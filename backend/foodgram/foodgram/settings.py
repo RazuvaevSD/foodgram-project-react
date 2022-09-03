@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv(
     default='ewm7m)*t0b-!fbb0md2*(9j*6j$sc#@b&g^8#1(k*0o8i)5qzb'
 )
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -73,7 +73,8 @@ DATABASES = {
 }
 
 STATIC_URL = '/backend_static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'backend_static/')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'backend_static/')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'backend_static/'),)
 
 MEDIA_URL = '/backend_media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'backend_media/')
