@@ -2,6 +2,13 @@
 ![workflow](https://github.com/RazuvaevSD/foodgram-project-react/actions/workflows/workflow.yml/badge.svg)
 Сервис, где гурманы деляться своими супер-рецептами
 
+# DEMO
+[демо-сайт](http://51.250.110.241/)  
+админская учетка:  
+username `boss`  
+email `boss@ex.ru`  
+password `boss!123`
+
 ## Установка:
 ## Как развернуть
 
