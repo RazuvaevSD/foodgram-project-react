@@ -32,7 +32,7 @@ class UserViewSet(DjoserUserViewSet):
                 'author': get_object_or_404(User, id=id).id}
         if request.method == 'POST':
             # Добавить подписку.
-            return add_object(serialiser=SubscribeSerializer,
+            return add_object(serializer=SubscribeSerializer,
                               data=data,
                               context={'request': request})
         if request.method == 'DELETE':
@@ -71,6 +71,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """Список или один тег (только чтение)."""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    pagination_class = None
     permission_classes = (IsAuthorOrReadOnly,)
 
 
@@ -91,7 +92,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'recipe': get_object_or_404(Recipe, pk=pk).pk}
         if request.method == 'POST':
             # Добавить в избранное.
-            return add_object(data=data, serialiser=FavoriteSerializer,
+            return add_object(data=data, serializer=FavoriteSerializer,
                               context={'request': request})
         if request.method == 'DELETE':
             # Удалить из избранного.
@@ -107,7 +108,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if request.method == 'POST':
             # Добавить в список покупок.
-            return add_object(serialiser=ShoppingCardSerializer, data=data,
+            return add_object(serializer=ShoppingCardSerializer, data=data,
                               context={'request': request})
         if request.method == 'DELETE':
             # Удалить из списка покупок.

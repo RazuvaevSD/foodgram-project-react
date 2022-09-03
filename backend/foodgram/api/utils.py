@@ -10,10 +10,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 
-def add_object(serialiser, data, context):
+def add_object(serializer, data, context):
     """Добавление объекта."""
     try:
-        serializer = serialiser(data=data, context=context)
+        serializer = serializer(data=data, context=context)
         serializer.is_valid(raise_exception=True)
         serializer.save()
     except IntegrityError as ie:
