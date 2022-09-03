@@ -9,7 +9,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .filters import (AuthorIdFilter, IsFavoritedFilter,
+from .filters import (AuthorIdFilter, IngredientFilter, IsFavoritedFilter,
                       IsInShoppingCartFilter, TagsSlugFilter)
 from .paginators import LimitPagePagination
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
@@ -63,7 +63,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = None
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    filter_backends = (IngredientFilter, filters.OrderingFilter)
     search_fields = ('name',)
     ordering = ['name']
 

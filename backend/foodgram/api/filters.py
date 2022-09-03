@@ -10,6 +10,10 @@ class TagsSlugFilter(filters.BaseFilterBackend):
         return queryset
 
 
+class IngredientFilter(filters.SearchFilter):
+    search_param = 'name'
+
+
 class AuthorIdFilter(filters.BaseFilterBackend):
     """Фильтр по автору."""
     def filter_queryset(self, request, queryset, view):
