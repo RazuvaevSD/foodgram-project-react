@@ -6,7 +6,8 @@ from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCard,
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
 from .filters import (AuthorIdFilter, IngredientFilter, IsFavoritedFilter,
@@ -80,6 +81,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """Управление рецептами."""
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = LimitPagePagination
     filter_backends = (AuthorIdFilter, IsFavoritedFilter,
                        IsInShoppingCartFilter, TagsSlugFilter)
