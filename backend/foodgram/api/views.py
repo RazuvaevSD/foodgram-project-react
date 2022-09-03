@@ -62,6 +62,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = None
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('name',)
     ordering = ['name']
